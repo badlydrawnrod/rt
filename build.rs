@@ -8,7 +8,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("cargo:rustc-link-search={}", out_dir.display());
 
     // put `minimal.ld` in the build directory
-    File::create(out_dir.join("minimal.ld"))?.write_all(include_bytes!("minimal.ld"))?;
+    File::create(out_dir.join("minimal.no_loader.ld"))?.write_all(include_bytes!("minimal.no_loader.ld"))?;
 
     Ok(())
 }

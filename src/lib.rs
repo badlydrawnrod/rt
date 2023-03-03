@@ -33,6 +33,18 @@ global_asm!(
     "   addi    a0, a0, 1",
     "   beqz    zero, clear_bss",
     "finish_bss:",
+    //  Copy the initialised data into RAM.
+    "   la      a0, _sdata",
+    "   la      a1, _edata",
+    "   la      a2, _sidata",
+    "copy_data:",
+    "   bgeu    a0, a1, finish_copy",
+    "   lb      t0, 0(a2)",
+    "   sb      t0, 0(a0)",
+    "   addi    a0, a0, 1",
+    "   addi    a2, a2, 1",
+    "   beqz    zero, copy_data",
+    "finish_copy:",
     //  Call main() so that it doesn't need to be a divergent function.
     "   call        main",
     //  Halt and catch fire.
