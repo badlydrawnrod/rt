@@ -42,8 +42,8 @@ SECTIONS
         . = ALIGN(4);        
     } > rom
 
-    /* Initialised data in RAM. We need startup code to copy this from ROM to RAM as there's no loader to do it for us. */
-    .data : AT(ADDR(.rodata) + SIZEOF(.rodata)) ALIGN(4)
+    /* Initialised data in RAM. Note: this expects the loader to do it, otherwise this would separate the LMA and VMA. */
+    .data : ALIGN(4)
     {
         _sdata = .;
         /* Must be called __global_pointer$ for linker relaxations to work. */
@@ -53,8 +53,6 @@ SECTIONS
         . = ALIGN(4);
         _edata = .;
     } > ram
-
-    _sidata = LOADADDR(.data);
 
     /* Uninitialised data in RAM. */
     .bss (NOLOAD) :

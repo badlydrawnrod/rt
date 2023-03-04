@@ -1,14 +1,19 @@
 use std::{env, error::Error, fs::File, io::Write, path::PathBuf};
 
+
 fn main() -> Result<(), Box<dyn Error>> {
-    // build directory for this crate
+    // Build directory for this crate.
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
 
-    // extend the library search path
+    // Extend the library search path.
     println!("cargo:rustc-link-search={}", out_dir.display());
 
-    // put `minimal.ld` in the build directory
-    File::create(out_dir.join("minimal.no_loader.ld"))?.write_all(include_bytes!("minimal.no_loader.ld"))?;
+    // Put `minimal.ld` in the build directory.
+    if cfg!(no_copy) {
+        File::create(out_dir.join("minimal.ld"))?.write_all(include_bytes!("minimal.no_copy.ld"))?;
+    } else {
+        File::create(out_dir.join("minimal.ld"))?.write_all(include_bytes!("minimal.ld"))?;
+    }
 
     Ok(())
 }
